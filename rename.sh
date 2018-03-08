@@ -1,8 +1,9 @@
 #!/bin/sh
 
-IFS='\n'
 n=1
 for f in `ls -tr *.jpg`; do
-    mv "$f" "$n".jpg
+    name="`printf '%.2d' $n`"
+    echo $name
+    mv "$f" "$name".jpg
     n=`expr $n + 1`
 done
