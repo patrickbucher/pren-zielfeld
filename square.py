@@ -13,8 +13,6 @@ def process(filename):
     image_gray = cv2.cvtColor(image_rgb, cv2.COLOR_RGB2GRAY)
     blurred = cv2.blur(image_gray, (5, 5))
     threshold = cv2.threshold(blurred, 80, 255, cv2.THRESH_BINARY)[1]
-    plt.imshow(threshold, cmap='gray')
-    plt.show()
 
     _, contours, hierarchy = cv2.findContours(threshold.copy(),
             cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
