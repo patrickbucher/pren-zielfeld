@@ -24,6 +24,9 @@ The target field is considered to enter the image from the top, thus a positive
 distance means the yellow circle is over the purple middle line, and a negative
 distance means the yellow circle is under the purple line.
 
+The actual size of the physical innermost circle must be measured manually and
+stored in INNERMOST_SQUARE_HEIGHT_CM.
+
 Usage:
 
     ./detect_target.py [image file]
