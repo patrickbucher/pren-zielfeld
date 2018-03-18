@@ -1,0 +1,6 @@
+#!/bin/sh
+
+for f in *.jpg;
+do
+    ./square.py "$f"
+done
