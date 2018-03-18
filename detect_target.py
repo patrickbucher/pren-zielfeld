@@ -36,6 +36,7 @@ Usage:
 import cv2
 import math
 import numpy as np
+import os
 import sys
 
 import matplotlib as mpl
@@ -146,6 +147,11 @@ def draw_distance_line(image, square_center):
     x = square_center[0]
     cv2.line(image, (x, square_center[1]), (x, middle), ORANGE, 5)
 
+def store(image, dir, filename):
+    outfile = os.path.join(dir, os.path.split(filename)[-1])
+    image_bgr = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+    cv2.imwrite(outfile, image_bgr)
+
 def process(filename):
     image_bgr = cv2.imread(filename)
     image_rgb = cv2.cvtColor(image_bgr, cv2.COLOR_BGR2RGB)
@@ -198,6 +204,7 @@ def process(filename):
             else:
                 write_text('unknown distance')
 
+    store(image_rgb, 'demo', filename)
     plt.imshow(image_rgb)
     plt.show()
 
