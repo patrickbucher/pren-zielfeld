@@ -13,6 +13,8 @@ blue = (0, 0, 255)
 yellow = (255, 255, 0)
 purple = (255, 0, 255)
 
+innermost_square_height_cm = 5.0
+
 def write_text(img, msg, col):
     cv2.putText(img, msg, (50,2400), cv2.FONT_HERSHEY_SIMPLEX, 4, col, 10)
 
@@ -63,27 +65,33 @@ def process(filename):
             cont = cont.astype('int')
             cv2.drawContours(image_rgb, [cont], -1, color, 10)
             if innermost:
+                perimeter = cv2.arcLength(cont, True)
+                innermost_square_height_px = perimeter / 4.0
+                print('perimeter={}px', perimeter)
+                cm_in_pixels = innermost_square_height_px / innermost_square_height_cm
+                print('1cm={}px'.format(cm_in_pixels))
                 (cx, cy) = center(cont)
                 dist = height/2 - cy
+                dist_cm = dist / cm_in_pixels
                 print('distance={}px'.format(dist))
                 if cx > 0 and cy > 0:
                     i = image_rgb
                     d = threshold.shape
                     cv2.circle(image_rgb, (cx, cy), 10, (255, 255, 0), 5)
                     if height*0.5 > dist >= height*0.3:
-                        write_text(i, 'far away', green)
+                        write_text(i, 'far away: {:.3f}cm'.format(dist_cm), green)
                     elif height*0.3 > dist >= height*0.2:
-                        write_text(i, 'away', green)
+                        write_text(i, 'away: {:.3f}cm'.format(dist_cm), green)
                     elif height*0.2 > dist >= height*0.1:
-                        write_text(i, 'close', yellow)
+                        write_text(i, 'close: {:.3f}cm'.format(dist_cm), yellow)
                     elif height*0.1 > dist >= height*0.05:
-                        write_text(i, 'closer', yellow)
+                        write_text(i, 'closer: {:.3f}cm'.format(dist_cm), yellow)
                     elif height*0.05 > dist >= height*0.01:
-                        write_text(i, 'very close', yellow)
+                        write_text(i, 'very close: {:.3f}cm'.format(dist_cm), yellow)
                     elif height*0.01 > dist >= 0:
-                        write_text(i, 'extremely close', purple)
+                        write_text(i, 'extremely close: {:.3f}cm'.format(dist_cm), purple)
                     elif dist < 0:
-                        write_text(i, 'over', red)
+                        write_text(i, 'over by: {:.3f}cm'.format(dist_cm), red)
                     elif dist > 0:
                         write_text('not there yet')
 
