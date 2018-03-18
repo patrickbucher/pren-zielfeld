@@ -2,5 +2,5 @@
 
 for f in *.jpg;
 do
-    ./square.py "$f"
+    ./detect_target.py "$f"
 done

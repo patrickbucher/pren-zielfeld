@@ -115,7 +115,7 @@ def estimate_distance_to_center(image, contours):
     _, cy = determine_center(contours)
     dist_px = h/2 - cy
     dist_cm = dist_px / cm_in_pixels
-    return dist_px, dist_cm
+    return int(dist_px), dist_cm
 
 def has_square_area(image, contours):
     h, w, _ = image.shape
@@ -186,7 +186,7 @@ def process(filename):
         draw_contours(image_rgb, smallest, BLUE, 10)
         (cx, cy) = determine_center(smallest)
         dist_px, dist_cm = estimate_distance_to_center(image_rgb, smallest)
-        print('distance: px={}, cm={:.3f}'.format(dist_px, dist_cm))
+        print('distance: {:4d}px {:7.3f}cm'.format(dist_px, dist_cm))
         if cx > 0 and cy > 0:
             i = image_rgb
             cv2.circle(image_rgb, (cx, cy), 10, YELLOW, 5)
@@ -205,7 +205,7 @@ def process(filename):
             elif h*0.01 > dist_px >= 0:
                 write_text(i, 'extremely close: {:.3f}cm'.format(dist_cm), PURPLE)
             elif dist_px < 0:
-                write_text(i, 'over by: {:.3f}cm'.format(dist_cm), RED)
+                write_text(i, 'passed: {:.3f}cm'.format(dist_cm), RED)
             elif dist_px > 0:
                 write_text('way too far away')
             else:
