@@ -1,6 +1,6 @@
 #!/bin/sh
 
-for f in *.jpg;
+for f in `find pics/ -type f | sort`
 do
     ./detect_target.py "$f"
 done
