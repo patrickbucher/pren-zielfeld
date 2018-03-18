@@ -77,22 +77,6 @@ def determine_center(contours):
         cy = int(m['m01']/m00)
     return (cx, cy)
 
-def is_innermost(hierarchy):
-    if len(hierarchy) < 3:
-        return False
-    elif hierarchy[2] < 2:
-        return True
-    else:
-        return False
-
-def is_outermost(hierarchy):
-    if len(hierarchy) < 3:
-        return False
-    elif hierarchy[3] < 0:
-        return True
-    else:
-        return False
-
 def draw_contours(image, contures, color, thickness):
     cv2.drawContours(image, [contures], 0, color, thickness)
 
