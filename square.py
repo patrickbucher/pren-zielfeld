@@ -7,6 +7,15 @@ import sys
 import matplotlib as mpl
 from matplotlib import pyplot as plt
 
+red = (255, 0, 0)
+green = (0, 255, 0)
+blue = (0, 0, 255)
+yellow = (255, 255, 0)
+purple = (255, 0, 255)
+
+def write_text(img, msg, col):
+    cv2.putText(img, msg, (50,2400), cv2.FONT_HERSHEY_SIMPLEX, 4, col, 10)
+
 def center(cont):
     cx, cy = -1, -1
     m = cv2.moments(cont)
@@ -58,23 +67,25 @@ def process(filename):
                 dist = height/2 - cy
                 print('distance={}px'.format(dist))
                 if cx > 0 and cy > 0:
+                    i = image_rgb
+                    d = threshold.shape
                     cv2.circle(image_rgb, (cx, cy), 10, (255, 255, 0), 5)
                     if height*0.5 > dist >= height*0.3:
-                        print('far away')
+                        write_text(i, 'far away', green)
                     elif height*0.3 > dist >= height*0.2:
-                        print('away')
+                        write_text(i, 'away', green)
                     elif height*0.2 > dist >= height*0.1:
-                        print('close')
+                        write_text(i, 'close', yellow)
                     elif height*0.1 > dist >= height*0.05:
-                        print('closer')
+                        write_text(i, 'closer', yellow)
                     elif height*0.05 > dist >= height*0.01:
-                        print('very close')
+                        write_text(i, 'very close', yellow)
                     elif height*0.01 > dist >= 0:
-                        print('extremely close')
+                        write_text(i, 'extremely close', purple)
                     elif dist < 0:
-                        print('over')
+                        write_text(i, 'over', red)
                     elif dist > 0:
-                        print('not there yet')
+                        write_text('not there yet')
 
     plt.imshow(image_rgb)
     plt.show()
