@@ -52,7 +52,7 @@ MAX_SQUARE_AREA_RATIO = 0.900 # 90% of the image
 MIN_SQUARE_XY_RATIO = 0.85
 MAX_SQUARE_XY_RATIO = 1.15
 
-MAX_PERIMETER_DELTA_RATIO = 0.01
+MAX_PERIMETER_DELTA_RATIO = 0.001
 
 # constants for output
 RED     = (255, 0, 0)
@@ -93,7 +93,15 @@ def is_square_shaped(contours):
     (x, y, w, h) = cv2.boundingRect(approx)
     (cx, cy) = determine_center(contours)
     width_height_ratio = w / float(h)
-    return MAX_SQUARE_XY_RATIO > width_height_ratio> MIN_SQUARE_XY_RATIO
+    sensible_width_height_ratio = (MAX_SQUARE_XY_RATIO > width_height_ratio> MIN_SQUARE_XY_RATIO) 
+
+    # L-shaped areas are also polygons, but have a much smaller area
+    square_area_px = cv2.contourArea(contours)
+    max_area = w*MAX_SQUARE_XY_RATIO * h*MAX_SQUARE_XY_RATIO
+    min_area = w*MIN_SQUARE_XY_RATIO * h*MIN_SQUARE_XY_RATIO
+    sensible_area = (max_area > square_area_px > min_area)
+
+    return sensible_width_height_ratio and sensible_area
 
 def estimate_distance_to_center(image, contours):
     h, _, _ = image.shape
@@ -205,8 +213,8 @@ def process(filename):
                 write_text('unknown distance')
 
     store(image_rgb, 'demo', filename)
-    plt.imshow(image_rgb)
-    plt.show()
+    #plt.imshow(image_rgb)
+    #plt.show()
 
 def main():
     if len(sys.argv) < 2:
