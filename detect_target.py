@@ -213,8 +213,8 @@ def process(filename):
                 write_text('unknown distance')
 
     store(image_rgb, 'demo', filename)
-    #plt.imshow(image_rgb)
-    #plt.show()
+    plt.imshow(image_rgb)
+    plt.show()
 
 def main():
     if len(sys.argv) < 2:
