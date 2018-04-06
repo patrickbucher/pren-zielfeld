@@ -55,7 +55,7 @@ MAX_SQUARE_AREA_RATIO = 0.950 # 95% of the image
 MIN_SQUARE_XY_RATIO = 0.95
 MAX_SQUARE_XY_RATIO = 1.05
 
-MAX_PERIMETER_DELTA_RATIO = 0.001
+MAX_PERIMETER_DELTA_RATIO = 0.1
 
 # constants for output
 RED     = (255, 0, 0)
@@ -93,6 +93,8 @@ def find_threshold(image):
 def is_square_shaped(contours):
     peri = cv2.arcLength(contours, True)
     approx = cv2.approxPolyDP(contours, MAX_PERIMETER_DELTA_RATIO * peri, True)
+    if len(approx) != 4:
+        return False
     (x, y, w, h) = cv2.boundingRect(approx)
     (cx, cy) = determine_center(contours)
     width_height_ratio = w / float(h)
