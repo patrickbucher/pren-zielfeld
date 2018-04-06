@@ -43,6 +43,7 @@ import numpy as np
 import os
 import sys
 import time
+import shutil
 
 # constants relevant for detection
 INNERMOST_SQUARE_HEIGHT_CM = 6.0
@@ -213,20 +214,21 @@ def process(filename):
                 write_text('way too far away')
             else:
                 write_text('unknown distance')
-            store(image_rgb, 'demo', filename)
+    store(image_rgb, 'demo', filename)
 
 def main():
+    shutil.rmtree('demo')
+    os.makedirs('demo')
     if len(sys.argv) == 2:
         process(sys.argv[1])
     else:
         import picamera
-        x, y = 1920, 1088
-        filename = '{}.jpg'.format(time.time())
+        x, y = 2400, 2400 
         cam = picamera.PiCamera()
-        cam.resolution = (y, x) # portrait mode
-        cam.capture(filename, format='jpeg')
-        process(filename)
-        os.remove(filename)
+        cam.resolution = (x, y)
+        for f in cam.capture_continuous('img{counter:04d}.jpg'):
+            process(f)
+            os.remove(f)
 
 if __name__ == '__main__':
     main()

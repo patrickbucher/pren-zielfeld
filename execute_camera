@@ -1,7 +1,0 @@
-#!/bin/sh
-
-rm -f "demo/*.jpg"
-while true
-do
-    ./detect_target.py
-done
