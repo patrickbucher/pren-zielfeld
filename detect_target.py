@@ -27,9 +27,13 @@ distance means the yellow circle is under the purple line.
 The actual size of the physical innermost circle must be measured manually and
 stored in INNERMOST_SQUARE_HEIGHT_CM.
 
-Usage:
+Usage (with file input):
 
     ./detect_target.py [image file]
+
+Usage (with Raspi Cam input):
+
+    ./detect_target.py
 
 """
 
@@ -37,10 +41,9 @@ import cv2
 import math
 import numpy as np
 import os
+import picamera
 import sys
-
-import matplotlib as mpl
-from matplotlib import pyplot as plt
+import time
 
 # constants relevant for detection
 INNERMOST_SQUARE_HEIGHT_CM = 5.0
@@ -211,16 +214,19 @@ def process(filename):
                 write_text('way too far away')
             else:
                 write_text('unknown distance')
-
-    store(image_rgb, 'demo', filename)
-    plt.imshow(image_rgb)
-    plt.show()
+            store(image_rgb, 'demo', filename)
 
 def main():
-    if len(sys.argv) < 2:
-        print("usage: {} [file]".format(sys.argv[0]))
-        sys.exit(1)
-    process(sys.argv[1])
+    if len(sys.argv) == 2:
+        process(sys.argv[1])
+    else:
+        x, y = 1920, 1088
+        filename = '{}.jpg'.format(time.time())
+        cam = picamera.PiCamera()
+        cam.resolution = (y, x) # portrait mode
+        cam.capture(filename, format='jpeg')
+        process(filename)
+        os.remove(filename)
 
 if __name__ == '__main__':
     main()
