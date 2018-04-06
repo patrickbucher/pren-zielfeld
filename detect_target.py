@@ -41,19 +41,18 @@ import cv2
 import math
 import numpy as np
 import os
-import picamera
 import sys
 import time
 
 # constants relevant for detection
-INNERMOST_SQUARE_HEIGHT_CM = 5.0
-GRAY_THRESHOLD = 80
+INNERMOST_SQUARE_HEIGHT_CM = 6.0
+GRAY_THRESHOLD = 100
 
 MIN_SQUARE_AREA_RATIO = 0.005 # 0.5% of the image
-MAX_SQUARE_AREA_RATIO = 0.900 # 90% of the image
+MAX_SQUARE_AREA_RATIO = 0.950 # 95% of the image
 
-MIN_SQUARE_XY_RATIO = 0.85
-MAX_SQUARE_XY_RATIO = 1.15
+MIN_SQUARE_XY_RATIO = 0.95
+MAX_SQUARE_XY_RATIO = 1.05
 
 MAX_PERIMETER_DELTA_RATIO = 0.001
 
@@ -220,6 +219,7 @@ def main():
     if len(sys.argv) == 2:
         process(sys.argv[1])
     else:
+        import picamera
         x, y = 1920, 1088
         filename = '{}.jpg'.format(time.time())
         cam = picamera.PiCamera()
