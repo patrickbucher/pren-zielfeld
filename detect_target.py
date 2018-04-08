@@ -42,8 +42,6 @@ import math
 import numpy as np
 import os
 import sys
-import time
-import shutil
 
 # constants relevant for detection
 INNERMOST_SQUARE_HEIGHT_CM = 6.0
