@@ -126,24 +126,36 @@ def has_square_area(image, contours):
     max = MAX_SQUARE_AREA_RATIO * image_area_px
     return max > square_area_px > min
 
-def classify_by_area(contour_list):
+def has_neighbours(hierarchy):
+    # hierarchy[0]: next, hierarchy[1]: previous
+    return hierarchy[0] != -1 or hierarchy[1] != -1
+
+def classify(cont_hier_list):
     min_area, max_area = math.inf, -1
-    min_contours, max_contours = None, None
-    for contours in contour_list:
-        area = cv2.contourArea(contours)
-        if area < min_area:
+    min_cont, max_cont = None, None
+    others = []
+    for item in cont_hier_list:
+        cont = item[0]
+        hier = item[1]
+        area = cv2.contourArea(cont)
+        # hier[3] = parent: smallest must have no child but a parent
+        if area < min_area and hier[2] == -1 and hier[3] != -1:
             min_area = area
-            min_contours = contours
-        if area > max_area:
-            max_area = area
-            max_contours = contours
+            min_cont = cont
+        # hier[2] = child: biggest must have a child
+        # (no parent is unreliable, because of the picture border)
+        if area > max_area and hier[2] != -1:
+                max_area = area
+                max_cont = cont
 
-    if len(contour_list) > 0 and min_contours is not None:
-        contour_list.remove(min_contours)
-    if len(contour_list) > 0 and max_contours is not None:
-        contour_list.remove(max_contours)
+    for item in cont_hier_list:
+        cont = item[0]
+        is_min = np.array_equal(cont, min_cont)
+        is_max = np.array_equal(cont, max_cont)
+        if not is_min and not is_max:
+            others.append(cont)
 
-    return (min_contours, max_contours, contour_list)
+    return (min_cont, max_cont, others)
 
 def calc_middle(image):
     h, _, _ = image.shape
@@ -170,19 +182,23 @@ def process(filename):
     image_rgb = cv2.cvtColor(image_bgr, cv2.COLOR_BGR2RGB)
     threshold = find_threshold(image_rgb)[1]
 
-    _, contours, _ = cv2.findContours(threshold.copy(),
+    _, contours, hierarchy = cv2.findContours(threshold.copy(),
             cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
     draw_middle_line(image_rgb)
     square_candidates = []
-    for cont in contours:
+    for item in zip(contours, hierarchy[0]):
+        cont = item[0]
+        hier = item[1]
+        if has_neighbours(hier):
+            continue
         if not has_square_area(image_rgb, cont):
             continue
         if not is_square_shaped(cont):
             continue
-        square_candidates.append(cont)
+        square_candidates.append((cont, hier))
 
-    smallest, biggest, others = classify_by_area(square_candidates)
+    smallest, biggest, others = classify(square_candidates)
     if biggest is not None:
         draw_contours(image_rgb, biggest, RED, 10)
     if len(others) > 0:
