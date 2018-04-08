@@ -140,9 +140,9 @@ def classify(cont_hier_list):
         if area < min_area and hier[2] == -1 and hier[3] != -1:
             min_area = area
             min_cont = cont
-        # hier[2] = child: biggest must have a child but no parent
-        # (or 0 as the parent, which could be the picture border)
-        if area > max_area and hier[2] != -1 and (hier[3] == -1 or hier[3] == 0):
+        # hier[2] = child: biggest must have a child (checking for no parent is
+        # unreliable, because the image frame could be the outermost parent)
+        if area > max_area and hier[2] != -1:
             max_area = area
             max_cont = cont
 
