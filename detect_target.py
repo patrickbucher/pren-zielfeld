@@ -52,8 +52,8 @@ GRAY_THRESHOLD = 100
 MIN_SQUARE_AREA_RATIO = 0.005 # 0.5% of the image
 MAX_SQUARE_AREA_RATIO = 0.950 # 95% of the image
 
-MIN_SQUARE_XY_RATIO = 0.95
-MAX_SQUARE_XY_RATIO = 1.05
+MIN_SQUARE_XY_RATIO = 0.85
+MAX_SQUARE_XY_RATIO = 1.15
 
 MAX_PERIMETER_DELTA_RATIO = 0.1
 
@@ -219,8 +219,6 @@ def process(filename):
     store(image_rgb, 'demo', filename)
 
 def main():
-    shutil.rmtree('demo')
-    os.makedirs('demo')
     if len(sys.argv) == 2:
         process(sys.argv[1])
     else:

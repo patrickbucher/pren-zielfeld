@@ -1,6 +1,7 @@
 #!/bin/sh
 
-rm -f "demo/*.jpg"
+rm -rf "demo"
+mkdir -p "demo"
 for f in `find pics/ -type f | sort`
 do
     ./detect_target.py "$f"
