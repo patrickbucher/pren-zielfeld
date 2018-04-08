@@ -230,7 +230,7 @@ def process(filename):
                 write_text('way too far away')
             else:
                 write_text('unknown distance')
-    store(image_rgb, 'demo', filename)
+    store(image_rgb, 'livedemo', filename)
 
 def main():
     if len(sys.argv) == 2:
