@@ -48,7 +48,7 @@ INNERMOST_SQUARE_HEIGHT_CM = 6.0
 GRAY_THRESHOLD = 120
 
 MIN_SQUARE_AREA_RATIO = 0.005 # 0.5% of the image
-MAX_SQUARE_AREA_RATIO = 0.9 # 90% of the image
+MAX_SQUARE_AREA_RATIO = 0.75 # 75% of the image
 
 MIN_SQUARE_XY_RATIO = 0.75
 MAX_SQUARE_XY_RATIO = 1.25
@@ -230,7 +230,7 @@ def process(filename):
                 write_text('way too far away')
             else:
                 write_text('unknown distance')
-    store(image_rgb, 'livedemo', filename)
+    store(image_rgb, 'demo', filename)
 
 def main():
     if len(sys.argv) == 2:
